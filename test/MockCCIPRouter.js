@@ -75,7 +75,9 @@ describe("MockRouter", function () {
         }
 
         // Log the final report of gas usage for each iteration.
-        console.log("Final Gas Usage Report:");
+    
+        const gasFinUse = gasUsageReport[2].gasUsed * 110 / 100;
+        console.log("Final Gas Usage Report:",gasFinUse);
         gasUsageReport.forEach((report) => {
             console.log(
             "Number of iterations %d - Gas used: %d",
@@ -83,7 +85,7 @@ describe("MockRouter", function () {
             report.gasUsed
         );
         });
-
+        
         
         const USDC = await ethers.getContractFactory("ERC20");
         const usdc = await USDC.deploy("USDC","USDC");
@@ -97,5 +99,9 @@ describe("MockRouter", function () {
         console.info("transferUSDC.target",transferUSDC.target);
 
         //  需要执行mint，approve，transferUSDC等方法
+        //  此时的gasFinUse 是最后的gas消耗得到的费用，是最后一次的gas消耗，上浮10%得到
+        transferUSDC.transferUsdc(chainSelector,owner.address,1000000,gasFinUse);
+
+
     });
 });
