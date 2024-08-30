@@ -87,16 +87,23 @@ describe("MockRouter", function () {
         });
         
         
-        const USDC = await ethers.getContractFactory("ERC20");
-        const usdc = await USDC.deploy("USDC","USDC");
+        const USDC = await ethers.getContractFactory("USDC");
+        const usdc = await USDC.deploy();
         await usdc.waitForDeployment();
         console.info("usdc.target",usdc.target);
+
         
         const TransferUSDC = await ethers.getContractFactory("TransferUSDC");
 
         const transferUSDC = await TransferUSDC.deploy(router.target,link.target,usdc.target);
         await transferUSDC.waitForDeployment();
         console.info("transferUSDC.target",transferUSDC.target);
+
+        usdc.mint(transferUSDC.target,1000000);
+        console.info("铸造1000000数量的USDC");
+
+        usdc.approve(transferUSDC.target,1000000);
+        console.info("批准支出1000000数量的USDC");
 
         //  需要执行mint，approve，transferUSDC等方法
         //  此时的gasFinUse 是最后的gas消耗得到的费用，是最后一次的gas消耗，上浮10%得到
